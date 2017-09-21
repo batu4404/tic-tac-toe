@@ -12,11 +12,9 @@ import Edge from './Edge';
 var root = new Node();
 let player = 1;
 
-function createGameTree(node, player) {
+export function createGameTree(node, player = 1) {
     let possibleSteps = node.getPossibleSteps();
     let board = node.getBoard();
-
-
 
     if (possibleSteps.length === 0) {
         return;
@@ -37,23 +35,20 @@ function createGameTree(node, player) {
         edge.setNext(newNode);
         edge.setStep(edgeStep);
 
-        // console.log(edge.getStep());
-        // console.log(newNode.getBoard());
+        node.addEdge(edge);
 
         let winner = calculateWinner(board);
 
         if (winner !== null) {
             if (winner === 1) {
-                node.setValue(1);
-                console.log('win');
+                newNode.setValue(1);
             } else {
-                node.setValue(-1)
-                console.log('lost');
+                newNode.setValue(-1)
             }
 
             return;
         } else {
-            node.setValue(0);
+            newNode.setValue(0);
         }
 
         if (possibleSteps.length - 1 > 0) {
@@ -62,8 +57,65 @@ function createGameTree(node, player) {
     }
 }
 
-createGameTree(root, player);
-console.log('done');
+export function minimax(node, isMaximisingPlayer) {
+    let nextSteps = node.getEdges();
+    let bestStep;
+
+    if (nextSteps.length === 0) {
+        return node.getValue();
+    }
+
+    if (isMaximisingPlayer) {
+        bestStep = -69;
+
+        for (let i = 0; i < nextSteps.length; i++) {
+            let value = minimax(nextSteps[i].getNext(), !isMaximisingPlayer);
+            // console.log('value', value);
+            if (value > bestStep) {
+                bestStep = value;
+            }
+        }
+    } else {
+        bestStep = 69;
+
+        for (let i = 0; i < nextSteps.length; i++) {
+            let value = minimax(nextSteps[i].getNext(), !isMaximisingPlayer);
+            // console.log('value', value);
+
+            if (value < bestStep) {
+                bestStep = value;
+            }
+        }
+    }
+
+    // console.log('best', bestStep);
+
+    return bestStep;
+}
+
+export function getBestMoveStep(node) {
+    let nextSteps = node.getEdges();
+    let bestStep = -69;
+    let bestStepFound;
+    let isMaximisingPlayer = true;
+    for (let i = 0; i < nextSteps.length; i++) {
+        let value = minimax(nextSteps[i].getNext(), !isMaximisingPlayer);
+        console.log('value', value);
+        if (value > bestStep) {
+            bestStep = value;
+            bestStepFound = nextSteps[i].getStep();
+        }
+    }
+
+    return bestStepFound % 10;;
+}
+
+// createGameTree(root, player);
+//
+// console.log('root', root.getEdges());
+
+// getBestMoveStep(root, true);
+// console.log('value', root.getValue());
 
 function calculateWinner(squares) {
   const lines = [

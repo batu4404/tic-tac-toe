@@ -13,7 +13,11 @@ export default class Node {
     }
 
     getEdges() {
-        return this.edges;
+        if (this.edges !== null) {
+            return this.edges;
+        } else {
+            return [];
+        }
     }
 
     getValue() {
@@ -46,5 +50,16 @@ export default class Node {
         }
 
         return possibleSteps;
+    }
+
+    getNextNode(competitorStep) {
+        for (let i = 0; i < this.edges.length; i++) {
+            console.log(this.edges[i]);
+            if (this.edges[i].getStep() === competitorStep) {
+                return this.edges[i].getNext();
+            }
+        }
+
+        return null;
     }
 }

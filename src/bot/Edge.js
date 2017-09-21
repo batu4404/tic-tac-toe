@@ -12,10 +12,6 @@ export default class Edge {
         return this.step;
     }
 
-    getStep() {
-        return this.step;
-    }
-
     setNext(next) {
         this.next = next;
     }
@@ -23,5 +19,4 @@ export default class Edge {
     setStep(step) {
         this.step = step;
     }
-
 }
