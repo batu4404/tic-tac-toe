@@ -5,16 +5,28 @@ import {createGameTree, minimax, getBestMoveStep} from './GameTree';
 
 export default class Bot {
     constructor() {
-        this.currentNode = new Node();
-        createGameTree(this.currentNode, 0);
-        console.log(this.currentNode);
+        this.root = new Node();
+        createGameTree(this.root, 0);
+        this.currentNode = this.root;
+        // console.log(this.currentNode);
+    }
+
+    reset() {
+        this.currentNode = this.root;
     }
 
     play(competitorStep, callback) {
+        // console.log('competitor step', competitorStep);
         let nextNode = this.currentNode.getNextNode(competitorStep)
-        console.log('next node', nextNode);
-        let nextStep = getBestMoveStep(nextNode);
-        console.log('nextStep', nextStep);
+        this.currentNode = nextNode;
+        let bestNextStepFound = getBestMoveStep(nextNode);
+
+        if (!bestNextStepFound) {
+            return;
+        }
+
+        let nextStep = bestNextStepFound.getStep() % 10;
+        this.currentNode = bestNextStepFound.getNext();
         callback(nextStep);
     }
 }

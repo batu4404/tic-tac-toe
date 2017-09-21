@@ -1,14 +1,6 @@
 import Node from './Node';
 import Edge from './Edge';
 
-// var root = new Node();
-//
-// var possibleSteps = root.getPossibleSteps();
-//
-// possibleSteps.forEach(function(step) {
-//     console.log('step', step);
-// });
-
 var root = new Node();
 let player = 1;
 
@@ -70,7 +62,6 @@ export function minimax(node, isMaximisingPlayer) {
 
         for (let i = 0; i < nextSteps.length; i++) {
             let value = minimax(nextSteps[i].getNext(), !isMaximisingPlayer);
-            // console.log('value', value);
             if (value > bestStep) {
                 bestStep = value;
             }
@@ -80,34 +71,30 @@ export function minimax(node, isMaximisingPlayer) {
 
         for (let i = 0; i < nextSteps.length; i++) {
             let value = minimax(nextSteps[i].getNext(), !isMaximisingPlayer);
-            // console.log('value', value);
-
             if (value < bestStep) {
                 bestStep = value;
             }
         }
     }
 
-    // console.log('best', bestStep);
-
     return bestStep;
 }
 
 export function getBestMoveStep(node) {
+    console.log('node', node);
     let nextSteps = node.getEdges();
     let bestStep = -69;
-    let bestStepFound;
+    let bestNextStepFound;
     let isMaximisingPlayer = true;
     for (let i = 0; i < nextSteps.length; i++) {
         let value = minimax(nextSteps[i].getNext(), !isMaximisingPlayer);
-        console.log('value', value);
         if (value > bestStep) {
             bestStep = value;
-            bestStepFound = nextSteps[i].getStep();
+            bestNextStepFound = nextSteps[i];
         }
     }
 
-    return bestStepFound % 10;;
+    return bestNextStepFound;
 }
 
 // createGameTree(root, player);

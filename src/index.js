@@ -96,65 +96,113 @@ class Game extends React.Component {
             }],
             stepNumber: 0,
             xIsNext: true,
-            isHuman: true
+            isHuman: true,
+            isGameOn: true
         };
 
         this.handleClick = this.handleClick.bind(this);
     }
 
+    restart() {
+        this.bot.reset();
+    }
+
     handleClick(i) {
+        if (this.state.isDraw) {
+            return;
+        }
+
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
         const current = history[history.length - 1];
         const squares = current.squares.slice();
-        if (calculateWinner(squares) || squares[i]) {
+        // const isDraw = checkDraw(squares);
+        if (squares[i] || calculateWinner(squares)) {
             return;
         }
         squares[i] = this.state.xIsNext ? 'X' : 'O';
+
+        const isDraw = checkDraw(squares);
+
         this.setState({
             history: history.concat([{
                 squares: squares
             }]),
             stepNumber: history.length,
             xIsNext: !this.state.xIsNext,
-            isHuman: !this.state.isHuman
+            isHuman: !this.state.isHuman,
+            isDraw: isDraw
         }, () => {
-            if (!this.state.isHuman) {
+            if (!this.state.isHuman && !this.state.isDraw) {
                 this.bot.play(i, this.handleClick);
             }
         });
     }
 
     jumpTo(step) {
+        return;
+
         this.setState({
             stepNumber: step,
             xIsNext: (step % 2) === 0,
         });
     }
 
+    restartGame() {
+        this.bot.reset();
+
+        this.setState({
+            history: [{
+                squares: Array(9).fill(null),
+            }],
+            stepNumber: 0,
+            xIsNext: true,
+            isHuman: true,
+            isGameOn: true
+        });
+    }
+
     render() {
         const history = this.state.history;
         const current = history[this.state.stepNumber];
-        const winner = calculateWinner(current.squares);
+        // const winner = calculateWinner(current.squares);
         const isHuman = this.state.isHuman;
 
         const moves = history.map((step, move) => {
             const desc = move ?
                 'Move #' + move :
                 'Game start';
-            return (
-                <li key={move}>
-                    <a href="#" onClick={() => this.jumpTo(move)}>{desc}</a>
-                </li>
-            );
+            if (move === 0) {
+                return (
+                    <li key={move}>
+                        <a href="#" onClick={() => this.restartGame()}>{desc}</a>
+                    </li>
+                );
+            } else {
+                return (
+                    <li key={move}>
+                        <a href="#">{'Move #' + move}</a>
+                    </li>
+                );
+            }
+            // return (
+            //     <li key={move}>
+            //         <a href="#" onClick={() => this.jumpTo(move)}>{desc}</a>
+            //     </li>
+            // );
         });
 
         let status;
-        if (winner) {
-            status = 'Winner: ' + winner;
+        if (this.state.isDraw) {
+            status = 'Draw!!!';
         } else {
-            status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+            let winner = calculateWinner(current.squares);
+            if (winner) {
+                status = 'Winner: ' + winner;
+            } else {
+                status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+            }
         }
-
+        
         return (
             <div className="game">
                 <div className="game-board">
@@ -202,4 +250,13 @@ function calculateWinner(squares) {
     }
   }
   return null;
+}
+
+function checkDraw(squares) {
+    for (let i = 0; i < squares.length; i++) {
+        if (squares[i] === null) {
+            return false;
+        }
+    }
+    return true;
 }
