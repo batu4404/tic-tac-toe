@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import getBot from './bot/index.js';
 
 // class Square extends React.Component {
 //     render() {
@@ -18,7 +19,7 @@ function Square(props) {
             {props.value}
         </button>
     );
-} 
+}
 
 class Board extends React.Component {
     // constructor() {
@@ -38,7 +39,7 @@ class Board extends React.Component {
           return;
         }
 
-        squares[i] = this.state.xIsNext ? 'X' : 'O'; 
+        squares[i] = this.state.xIsNext ? 'X' : 'O';
         this.setState({
             squares: squares,
             xIsNext: !this.state.xIsNext
@@ -47,9 +48,9 @@ class Board extends React.Component {
 
     renderSquare(i) {
         return (
-            <Square 
+            <Square
                 value={this.props.squares[i]}
-                onClick={() => this.props.onClick(i)} 
+                onClick={() => this.props.onClick(i)}
             />
         );
     }
@@ -155,10 +156,12 @@ class Game extends React.Component {
 
 // ========================================
 
-ReactDOM.render(
-    <Game />,
-    document.getElementById('root')
-);
+// ReactDOM.render(
+//     <Game />,
+//     document.getElementById('root')
+// );
+
+var bot = getBot();
 
 function calculateWinner(squares) {
   const lines = [
