@@ -97,14 +97,11 @@ class Game extends React.Component {
             stepNumber: 0,
             xIsNext: true,
             isHuman: true,
-            isGameOn: true
+            isGameOn: true,
+            isDraw: false
         };
 
         this.handleClick = this.handleClick.bind(this);
-    }
-
-    restart() {
-        this.bot.reset();
     }
 
     handleClick(i) {
@@ -157,7 +154,8 @@ class Game extends React.Component {
             stepNumber: 0,
             xIsNext: true,
             isHuman: true,
-            isGameOn: true
+            isGameOn: true,
+            isDraw: false
         });
     }
 
@@ -202,7 +200,7 @@ class Game extends React.Component {
                 status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
             }
         }
-        
+
         return (
             <div className="game">
                 <div className="game-board">

@@ -8,7 +8,7 @@ export default class Bot {
         this.root = new Node();
         createGameTree(this.root, 0);
         this.currentNode = this.root;
-        // console.log(this.currentNode);
+        console.log(this.root);
     }
 
     reset() {

@@ -29,7 +29,7 @@ export function createGameTree(node, player = 1) {
 
         node.addEdge(edge);
 
-        let winner = calculateWinner(board);
+        let winner = calculateWinner(newBoard);
 
         if (winner !== null) {
             if (winner === 1) {
@@ -88,6 +88,7 @@ export function getBestMoveStep(node) {
     let isMaximisingPlayer = true;
     for (let i = 0; i < nextSteps.length; i++) {
         let value = minimax(nextSteps[i].getNext(), !isMaximisingPlayer);
+        console.log('value', value);
         if (value > bestStep) {
             bestStep = value;
             bestNextStepFound = nextSteps[i];
